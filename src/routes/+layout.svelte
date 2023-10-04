@@ -6,12 +6,39 @@
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { AppBar, AppShell, storePopup, initializeStores, Toast } from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
-
 	initializeStores();
+
+	import { pwaInfo } from 'virtual:pwa-info';
+	import { onMount } from 'svelte';
+
+	onMount(async () => {
+		if (pwaInfo) {
+			const { registerSW } = await import('virtual:pwa-register');
+			registerSW({
+				immediate: true,
+				onRegistered(r) {
+					// uncomment following code if you want check for updates
+					// r && setInterval(() => {
+					//    console.log('Checking for sw update')
+					//    r.update()
+					// }, 20000 /* 20s for testing purposes */)
+					console.log(`SW Registered: ${r}`);
+				},
+				onRegisterError(error) {
+					console.log('SW registration error', error);
+				}
+			});
+		}
+	});
+	$: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
 
 	export let data;
 	$: ({ user } = data);
 </script>
+
+<svelte:head>
+	{@html webManifest}
+</svelte:head>
 
 <Toast />
 

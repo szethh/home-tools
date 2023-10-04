@@ -4,18 +4,74 @@
 	import { fly } from 'svelte/transition';
 	import { enhance } from '$app/forms';
 
-	import { getToastStore } from '@skeletonlabs/skeleton';
+	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import type { GroceryItem } from '$lib/schema.js';
+	import { onMount } from 'svelte';
+	import { invalidate } from '$app/navigation';
+	import { writable } from 'svelte/store';
+	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 
 	const toastStore = getToastStore();
 
 	export let data;
-	$: ({ shoppingList } = data);
 
-	$: console.log(shoppingList);
+	const groceryStore = (initial: GroceryItem[] = []) => {
+		const store = writable(initial);
 
-	let items: (GroceryItem & { form?: HTMLFormElement })[];
-	$: items = shoppingList.sort((a, b) => Number(a.status) - Number(b.status));
+		function set(value: GroceryItem[]) {
+			store.set(value.sort((a, b) => Number(a.status) - Number(b.status) || a.id - b.id));
+		}
+
+		return {
+			...store,
+			set
+		};
+	};
+
+	let items = groceryStore();
+	let itemsCopy: GroceryItem[];
+	$: {
+		// working copy
+		$items = data.shoppingList;
+		// to compare
+		itemsCopy = structuredClone(data.shoppingList);
+	}
+
+	let updateTimeout: NodeJS.Timeout;
+	$: {
+		$items;
+		if (browser) queueUpdate();
+	}
+
+	const queueUpdate = () => {
+		clearTimeout(updateTimeout);
+		updateTimeout = setTimeout(() => {
+			const diff = $items.filter((a) =>
+				itemsCopy.some((b) => b.id === a.id && (a.name !== b.name || a.status !== b.status))
+			);
+
+			if (diff.length) {
+				fetch(`${$page.url}`, {
+					method: 'post',
+					body: JSON.stringify(diff)
+				})
+					.then(() => invalidate('db:groceries'))
+					.catch((e) => {
+						const t: ToastSettings = {
+							message: e as string
+						};
+						toastStore.trigger(t);
+					});
+			}
+		}, 1000);
+	};
+
+	onMount(() => {
+		queueUpdate();
+	});
+
+	$: console.log($items);
 </script>
 
 <div class="p-5 flex flex-col gap-4">
@@ -29,59 +85,30 @@
 		</div>
 	</form>
 
-	{#each items as item, i (item.id)}
+	{#each $items as item, i (item.id)}
 		<div animate:flip={{ duration: 200 }} in:fly={{ duration: 200 }}>
-			<form
-				method="post"
-				action="?/update"
-				bind:this={item.form}
-				use:enhance={({ formData, cancel }) => {
-					console.log('submitting');
+			<div class="flex items-center gap-2">
+				<input type="hidden" name="itemId" value={item.id} />
 
-					if (!formData.has('name')) cancel();
+				<input
+					type="checkbox"
+					name="status"
+					bind:checked={item.status}
+					class="checkbox input w-10 h-10 rounded-full"
+				/>
 
-					return async ({ result, update }) => {
-						if (result.type === 'failure') {
-							// svelte does not allow type annotations inside the markup...
-							// so we use string templating to 'force' msg to be a string
-							// otherwise typescript complains
-							const msg = `${result.data?.message ?? 'Oops!'}`;
-							toastStore.trigger({ message: msg });
-						}
-						update();
-					};
-				}}
-			>
-				<div class="flex items-center gap-2">
-					<input type="hidden" name="itemId" value={item.id} />
+				<div class="input-group input-group-divider grid-cols-[1fr_auto]">
+					<input type="text" name="name" bind:value={item.name} class="input" />
 
-					<input
-						type="checkbox"
-						name="status"
-						checked={item.status}
-						class="checkbox input w-10 h-10 rounded-full"
-						on:input={() => {
-							item.form?.requestSubmit();
-						}}
-					/>
+					<form method="post" action="?/remove" use:enhance>
+						<input type="hidden" name="itemId" value={item.id} />
 
-					<div class="input-group input-group-divider grid-cols-[1fr_auto]">
-						<input type="text" name="name" bind:value={item.name} class="input" />
-
-						<!-- on:focusout={() => {
-								item.form?.requestSubmit();
-							}} -->
-
-						<form method="post" action="?/remove" use:enhance>
-							<input type="hidden" name="itemId" value={item.id} />
-
-							<button class="btn variant-filled-error aspect-square" type="submit">
-								<iconify-icon icon="mdi:remove" />
-							</button>
-						</form>
-					</div>
+						<button class="btn variant-filled-error aspect-square" type="submit">
+							<iconify-icon icon="mdi:remove" />
+						</button>
+					</form>
 				</div>
-			</form>
+			</div>
 		</div>
 	{/each}
 </div>

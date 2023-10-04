@@ -9,9 +9,9 @@
 	let user: string;
 </script>
 
-<div class="my-4">
-	<div class="flex flex-col gap-4 items-center">
-		<div class="grid grid-cols-[1fr_auto] gap-2 items-center">
+<div class="my-4 flex justify-center">
+	<div class="grid grid-flow-row gap-4 items-center mx-20">
+		<div class="grid grid-cols-[1fr_auto] gap-2 items-center mb-4">
 			<input class="input" type="text" placeholder="change name" bind:value={user} />
 			<button
 				on:click={() => {
@@ -30,7 +30,6 @@
 				<iconify-icon icon={route.icon} />
 				{route.name}
 			</a>
-			<hr />
 		{/each}
 	</div>
 </div>
