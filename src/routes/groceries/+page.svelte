@@ -1,7 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
 	import { flip } from 'svelte/animate';
-	import { fly } from 'svelte/transition';
 	import { enhance } from '$app/forms';
 
 	import { getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
@@ -19,8 +18,20 @@
 	const groceryStore = (initial: GroceryItem[] = []) => {
 		const store = writable(initial);
 
+		// remember the previous ordering
+		const sortBy = (value: GroceryItem[]) =>
+			value.reduce((a, c, i) => {
+				a[c.id] = i;
+				return a;
+			}, {} as { [key: string]: number });
+
+		let sortByObject = sortBy(initial);
+
 		function set(value: GroceryItem[]) {
-			store.set(value.sort((a, b) => Number(a.status) - Number(b.status) || a.id - b.id));
+			let temp = value.sort((a, b) => sortByObject[a.id] - sortByObject[b.id]);
+			store.set(temp.sort((a, b) => Number(a.status) - Number(b.status)));
+
+			sortByObject = sortBy(value);
 		}
 
 		return {
@@ -86,7 +97,7 @@
 	</form>
 
 	{#each $items as item, i (item.id)}
-		<div animate:flip={{ duration: 200 }} in:fly={{ duration: 200 }}>
+		<div animate:flip={{ duration: 200 }}>
 			<div class="flex items-center gap-2">
 				<input type="hidden" name="itemId" value={item.id} />
 

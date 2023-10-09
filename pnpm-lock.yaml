@@ -11,6 +11,9 @@ dependencies:
   socket.io:
     specifier: ^4.7.2
     version: 4.7.2
+  socket.io-client:
+    specifier: ^4.7.2
+    version: 4.7.2
 
 devDependencies:
   '@skeletonlabs/skeleton':
@@ -37,6 +40,9 @@ devDependencies:
   '@types/node':
     specifier: 20.8.0
     version: 20.8.0
+  '@types/web-app-manifest':
+    specifier: ^1.0.5
+    version: 1.0.5
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.0.0
     version: 6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.28.0)(typescript@5.0.2)
@@ -85,6 +91,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.4.3
     version: 3.4.3(@babel/core@7.23.0)(postcss@8.4.31)(svelte@4.0.5)
+  sveltekit-sse:
+    specifier: ^0.3.3
+    version: 0.3.3(svelte@4.0.5)
   tailwindcss:
     specifier: 3.3.3
     version: 3.3.3
@@ -1939,6 +1948,10 @@ packages:
     resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
     dev: true
 
+  /@types/web-app-manifest@1.0.5:
+    resolution: {integrity: sha512-x9tJEeCyACefwUf5cdmW8Apeq8FVbmf59umw7CHauBMKTTGfx74u75UZ6XRIuHl+qX9dIEuRq84SpUOjIAgtTw==}
+    dev: true
+
   /@typescript-eslint/eslint-plugin@6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.28.0)(typescript@5.0.2):
     resolution: {integrity: sha512-xuv6ghKGoiq856Bww/yVYnXGsKa588kY3M0XK7uUW/3fJNNULKRfZfSBkMTSpqGG/8ZCXCadfh8G/z/B4aqS/A==}
     engines: {node: ^16.0.0 || >=18.0.0}
@@ -2775,6 +2788,20 @@ packages:
     dependencies:
       once: 1.4.0
     dev: true
+
+  /engine.io-client@6.5.2:
+    resolution: {integrity: sha512-CQZqbrpEYnrpGqC07a9dJDz4gePZUgTPMU3NKJPSeQOyw27Tst4Pl3FemKoFGAlHzgZmKjoRmiJvbWfhCXUlIg==}
+    dependencies:
+      '@socket.io/component-emitter': 3.1.0
+      debug: 4.3.4
+      engine.io-parser: 5.2.1
+      ws: 8.11.0
+      xmlhttprequest-ssl: 2.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
 
   /engine.io-parser@5.2.1:
     resolution: {integrity: sha512-9JktcM3u18nU9N2Lz3bWeBgxVgOKpw7yhRaoxQA3FUDZzzw+9WlA6p4G4u0RixNkg14fH7EfEc/RhpurtiROTQ==}
@@ -4663,6 +4690,20 @@ packages:
       - utf-8-validate
     dev: false
 
+  /socket.io-client@4.7.2:
+    resolution: {integrity: sha512-vtA0uD4ibrYD793SOIAwlo8cj6haOeMHrGvwPxJsxH7CeIksqJ+3Zc06RvWTIFgiSqx4A3sOnTXpfAEE2Zyz6w==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      '@socket.io/component-emitter': 3.1.0
+      debug: 4.3.4
+      engine.io-client: 6.5.2
+      socket.io-parser: 4.2.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   /socket.io-parser@4.2.4:
     resolution: {integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==}
     engines: {node: '>=10.0.0'}
@@ -4967,6 +5008,14 @@ packages:
       locate-character: 3.0.0
       magic-string: 0.30.4
       periscopic: 3.1.0
+    dev: true
+
+  /sveltekit-sse@0.3.3(svelte@4.0.5):
+    resolution: {integrity: sha512-ZR/hPw6Cld/toY95w9gOU6dmO62WXdYQU0LYNw5WRS2RoqoblG9iSpZ4qVxocrtqfWc7Dw8qv2BkpA5sDFK+dQ==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 4.0.5
     dev: true
 
   /tailwindcss@3.3.3:
@@ -5554,6 +5603,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+    dev: false
+
+  /xmlhttprequest-ssl@2.0.0:
+    resolution: {integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==}
+    engines: {node: '>=0.4.0'}
     dev: false
 
   /yallist@3.1.1:
