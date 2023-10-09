@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+  home-tools:
+    container_name: home-tools
+    image: home-tools:latest
+    build: .
+    volumes:
+      - ./data:/data
+    environment:
+      - DB_PATH=/data/sqlite.db
+    ports:
+      - 8080:8080
+    restart: unless-stopped
