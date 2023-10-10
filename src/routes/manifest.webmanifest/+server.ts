@@ -4,7 +4,7 @@ import type { WebAppManifest } from 'web-app-manifest';
 export const prerender = true;
 
 const manifest: WebAppManifest = {
-	theme_color: '#5b927e',
+	theme_color: '#323a4e', // #5b927e
 	background_color: '#323a4e',
 	display: 'standalone',
 	scope: '/',
