@@ -4,23 +4,23 @@ import type { WebAppManifest } from 'web-app-manifest';
 export const prerender = true;
 
 const manifest: WebAppManifest = {
-	theme_color: '#fcfeef',
-	background_color: '#f39072',
+	theme_color: '#5b927e',
+	background_color: '#323a4e',
 	display: 'standalone',
 	scope: '/',
 	start_url: '/',
 	id: '/',
 	name: 'Home tools',
-	short_name: 'Home',
+	short_name: 'Home tools',
 	description: 'Tools for organizing our home life :3',
 	orientation: 'portrait',
 	categories: ['social', 'lifestyle'], // https://github.com/w3c/manifest/wiki/Categories
 	shortcuts: [
-		{
-			name: 'Groceries',
-			url: '/groceries',
-			icons: [{ src: '/shortcuts/settings.png', sizes: '192x192' }]
-		}
+		// {
+		// 	name: 'Groceries',
+		// 	url: '/groceries',
+		// 	icons: [{ src: '/shortcuts/settings.png', sizes: '192x192' }]
+		// }
 	],
 	icons: [
 		{
